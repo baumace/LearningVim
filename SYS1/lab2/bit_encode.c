@@ -3,12 +3,13 @@
 
 #define MAX_MESSAGE_LENGTH 200
 
-void get_message(char* );
-void print_as_hexadecimal(char* );
+void get_message(unsigned char* );
+void print_as_hexadecimal(unsigned char* );
+void get_key(unsigned char* );
 
 int main() {
 	/* Variable definitions */ 
-	char *message_array;
+	unsigned char *message_array, key;
 
 	/* Allocate */ 
 	message_array = calloc(MAX_MESSAGE_LENGTH, sizeof(char));
@@ -27,10 +28,15 @@ int main() {
 	print_as_hexadecimal(message_array);
 
 	/* Prompt the user for a 4 bit key */ 
+	printf("\nEnter the 4 bit key: ");
 
 	/* Use getchar() to read in the 4 digits */ 
-
 	/* Convert key from 4 bits to 8 bits */ 
+	get_key(&key);
+
+	/* debug */ 
+	printf("%d", key);
+
 
 	/* Cipher the text */ 
 
@@ -45,7 +51,7 @@ int main() {
 	return EXIT_SUCCESS;
 }
 
-void get_message(char* output_arr) {
+void get_message(unsigned char* output_arr) {
 	char input_char;
 	int chars_read = 0;
 
@@ -59,7 +65,7 @@ void get_message(char* output_arr) {
 	*(output_arr+chars_read) = '\0';
 }
 
-void print_as_hexadecimal(char* input_arr) {
+void print_as_hexadecimal(unsigned char* input_arr) {
 	int index = 0;
 
 	/* Print all characters as hexadecimal */
@@ -71,4 +77,20 @@ void print_as_hexadecimal(char* input_arr) {
 		printf("%x ", *(input_arr+index));
 		index++;
 	}
+}
+
+void get_key(unsigned char* output_key) {
+	char input_char;
+	int index = 0;
+
+	/* Read in the 4 digit key */
+	while (input_char = getchar(), (input_char == '1' || input_char == '0') && index < 4) {
+		*output_key = *output_key << 1;
+		if (input_char == '1') {
+			*output_key = *output_key | 0x1;
+		}
+	}
+
+	/* Duplicate 4 digit key to 8 digit key */ 
+	*output_key = (*output_key << 4) | *output_key;
 }
