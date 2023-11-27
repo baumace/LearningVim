@@ -3,13 +3,15 @@
 
 #define MAX_MESSAGE_LENGTH 200
 
-void get_message(unsigned char* );
-void print_as_hexadecimal(unsigned char* );
-void get_key(unsigned char* );
+void get_message(unsigned char*, int*);
+void print_as_hexadecimal(unsigned char*, int);
+void get_key(unsigned char*);
+void encrypt(unsigned char*, unsigned char, int);
 
 int main() {
 	/* Variable definitions */ 
 	unsigned char *message_array, key;
+	int message_size = 0;
 
 	/* Allocate */ 
 	message_array = calloc(MAX_MESSAGE_LENGTH, sizeof(char));
@@ -18,14 +20,14 @@ int main() {
 	printf("Enter the message to be encrypted: ");
 	
 	/* Use getchar() to reach each ASCII character and store into array */
-	get_message(message_array);
+	get_message(message_array, &message_size);
 
 	/* Print out received clear text */
 	printf("Message to encrypt: %s", message_array);
 
 	/* Print out the clear text as hexadecimal numbers */ 
 	printf("\nClear text as hexadecimal: ");
-	print_as_hexadecimal(message_array);
+	print_as_hexadecimal(message_array, message_size);
 
 	/* Prompt the user for a 4 bit key */ 
 	printf("\nEnter the 4 bit key: ");
@@ -34,13 +36,12 @@ int main() {
 	/* Convert key from 4 bits to 8 bits */ 
 	get_key(&key);
 
-	/* debug */ 
-	printf("%d", key);
-
-
 	/* Cipher the text */ 
+	encrypt(message_array, key, message_size);
 
 	/* Print out the cipher with 10 values per row */ 
+	printf("Encrypted text as hexadecimal: ");
+	print_as_hexadecimal(message_array, message_size);
 
 	/* Free */
 	free(message_array);
@@ -51,7 +52,7 @@ int main() {
 	return EXIT_SUCCESS;
 }
 
-void get_message(unsigned char* output_arr) {
+void get_message(unsigned char* output_arr, int* size) {
 	char input_char;
 	int chars_read = 0;
 
@@ -63,18 +64,21 @@ void get_message(unsigned char* output_arr) {
 
 	/* Add null terminating char */ 
 	*(output_arr+chars_read) = '\0';
+
+	/* Update message size */ 
+	*size = chars_read;	
 }
 
-void print_as_hexadecimal(unsigned char* input_arr) {
+void print_as_hexadecimal(unsigned char* input_arr, int size) {
 	int index = 0;
 
 	/* Print all characters as hexadecimal */
-	while (*(input_arr+index) != '\0') {
+	while (index < size) {
 		if (index % 10 == 0) {
 			printf("\n");
 		}
 
-		printf("%x ", *(input_arr+index));
+		printf("%02x ", *(input_arr+index));
 		index++;
 	}
 }
@@ -93,4 +97,14 @@ void get_key(unsigned char* output_key) {
 
 	/* Duplicate 4 digit key to 8 digit key */ 
 	*output_key = (*output_key << 4) | *output_key;
+}
+
+void encrypt(unsigned char* input_arr, unsigned char key, int size) {
+	int chars_encrypted = 0;
+
+	/* Encrypt all the characters */ 
+	while (chars_encrypted < size) {
+		*(input_arr+chars_encrypted) = *(input_arr+chars_encrypted) ^ key;
+		chars_encrypted++;
+	}
 }
