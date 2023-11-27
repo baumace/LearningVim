@@ -4,6 +4,7 @@
 #define MAX_MESSAGE_LENGTH 200
 
 void get_message(char* );
+void print_as_hexadecimal(char* );
 
 int main() {
 	/* Variable definitions */ 
@@ -22,6 +23,8 @@ int main() {
 	printf("Message to encrypt: %s", message_array);
 
 	/* Print out the clear text as hexadecimal numbers */ 
+	printf("\nClear text as hexadecimal: ");
+	print_as_hexadecimal(message_array);
 
 	/* Prompt the user for a 4 bit key */ 
 
@@ -34,6 +37,7 @@ int main() {
 	/* Print out the cipher with 10 values per row */ 
 
 	/* Free */
+	free(message_array);
 
 	/* New line for console */ 
 	printf("\n");
@@ -53,4 +57,18 @@ void get_message(char* output_arr) {
 
 	/* Add null terminating char */ 
 	*(output_arr+chars_read) = '\0';
+}
+
+void print_as_hexadecimal(char* input_arr) {
+	int index = 0;
+
+	/* Print all characters as hexadecimal */
+	while (*(input_arr+index) != '\0') {
+		if (index % 10 == 0) {
+			printf("\n");
+		}
+
+		printf("%x ", *(input_arr+index));
+		index++;
+	}
 }
