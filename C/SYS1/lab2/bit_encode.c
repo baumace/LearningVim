@@ -1,10 +1,3 @@
-/* Note:
- * Correctness is not the primary goal for this solution.
- * Effort was made to only test correctness for provided tests and few other cases.
- * Additionally, while best practices were attempted to be followed, some rough edges are present.
- * Thus, if this solution is found by a student the solution may not be perfect.
- */
-
 #include <stdlib.h>
 #include <stdio.h>
 
